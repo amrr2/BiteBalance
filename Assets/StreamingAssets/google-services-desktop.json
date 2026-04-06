@@ -1,0 +1,32 @@
+{
+  "project_info": {
+    "project_number": "562569348736",
+    "firebase_url": "https://bite-balance-c2df8-default-rtdb.firebaseio.com",
+    "project_id": "bite-balance-c2df8",
+    "storage_bucket": "bite-balance-c2df8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:562569348736:ios:3c0874919eaa1cd0868865",
+        "android_client_info": {
+          "package_name": "com.bitebalance.app"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi2NVSPIjk8Y7-LDXVTaj4sZ5fHyEOFLI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 0
+        },
+        "appinvite_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
