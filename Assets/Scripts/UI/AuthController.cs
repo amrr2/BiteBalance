@@ -94,4 +94,4 @@ public class AuthController : MonoBehaviour
         }
         Debug.Log(message);
     }
-}
+}// UI Polish v1.1
