@@ -5,15 +5,19 @@ using TMPro;
 public class DashboardController : MonoBehaviour
 {
     public Button logMealButton;
+    
     public TextMeshProUGUI calorieNumberText;
+    
     public TextMeshProUGUI foodValueText;
     
+    public Button scanFoodButton;
     private int goalCalories = 2000;
 
     void Start()
     {
         logMealButton.onClick.AddListener(OpenLogMeal);
         UpdateCalorieDisplay();
+        scanFoodButton.onClick.AddListener(OpenScanFood);
     }
 
     void UpdateCalorieDisplay()
@@ -35,5 +39,9 @@ public class DashboardController : MonoBehaviour
     void OpenLogMeal()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("LogMeals");
+    }
+    void OpenScanFood()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("ScanFood");
     }
 }

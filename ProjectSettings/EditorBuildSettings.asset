@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BMICalculator.unity
     guid: 6397a3527039c4056a3d4f3d2a175658
+  - enabled: 1
+    path: Assets/Scenes/ScanFood.unity
+    guid: 9d8f32f09d9e3437182e3d3b255603e1
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
