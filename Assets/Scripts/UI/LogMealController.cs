@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 using UnityEngine.Networking;
+using Firebase.Auth;
+using System.Threading.Tasks;
 
 public class LogMealController : MonoBehaviour
 {
@@ -15,9 +17,15 @@ public class LogMealController : MonoBehaviour
     [Header("API Settings")]
     private string apiKey = "e2bce2461e764673ae23dbcdc1a6f967";
     private string apiUrl = "https://api.spoonacular.com/food/ingredients/search?query=";
-
+    
+    // Service for saving to Firebase
+    private IFoodDiaryService diaryService;
+    
     void Start()
     {
+        // Create the service
+        diaryService = new FirebaseDiaryService();
+        
         searchButton.onClick.AddListener(OnSearchClicked);
         backButton.onClick.AddListener(OnBackClicked);
     }
@@ -44,7 +52,7 @@ public class LogMealController : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        CreateResultItem("Searching...", "", "");
+        CreateResultItem("Searching...", "", "", 0, 0, 0);
 
         string encodedQuery = UnityWebRequest.EscapeURL(query);
         string fullUrl = apiUrl + encodedQuery + "&number=5&apiKey=" + apiKey;
@@ -77,13 +85,13 @@ public class LogMealController : MonoBehaviour
                 }
                 else
                 {
-                    CreateResultItem("No results found", "", "");
+                    CreateResultItem("No results found", "", "", 0, 0, 0);
                 }
             }
             else
             {
                 Debug.LogError("API Error: " + request.error);
-                CreateResultItem("Error searching", "", request.error);
+                CreateResultItem("Error searching", "", request.error, 0, 0, 0);
             }
         }
     }
@@ -119,7 +127,10 @@ public class LogMealController : MonoBehaviour
                 CreateResultItem(
                     CapitalizeFirst(name) + " (100g)",
                     calories.ToString("F0"),
-                    "P: " + protein.ToString("F1") + "g | C: " + carbs.ToString("F1") + "g | F: " + fat.ToString("F1") + "g"
+                    "P: " + protein.ToString("F1") + "g | C: " + carbs.ToString("F1") + "g | F: " + fat.ToString("F1") + "g",
+                    protein,
+                    carbs,
+                    fat
                 );
             }
         }
@@ -131,7 +142,7 @@ public class LogMealController : MonoBehaviour
         return char.ToUpper(str[0]) + str.Substring(1);
     }
 
-    void CreateResultItem(string foodName, string calories, string macros)
+    void CreateResultItem(string foodName, string calories, string macros, float protein, float carbs, float fat)
     {
         GameObject item = new GameObject("FoodItem");
         item.transform.SetParent(resultsPanel, false);
@@ -186,32 +197,51 @@ public class LogMealController : MonoBehaviour
             macroTmp.alignment = TextAlignmentOptions.Center;
         }
 
-        // Make clickable
+        // Make clickable - pass all nutrition data
         Button btn = item.AddComponent<Button>();
-        string cal = calories;
+        string calStr = calories;
         string food = foodName;
-        btn.onClick.AddListener(() => OnFoodSelected(food, cal));
+        float p = protein;
+        float c = carbs;
+        float f = fat;
+        btn.onClick.AddListener(() => OnFoodSelected(food, calStr, p, c, f));
     }
 
-   void OnFoodSelected(string foodName, string calories)
-{
-    Debug.Log("Selected: " + foodName + " - " + calories + " kcal");
-    
-    // Parse calories to int
-    int calAmount = 0;
-    int.TryParse(calories, out calAmount);
-    
-    // Save to PlayerPrefs (simple storage for now)
-    int currentCalories = PlayerPrefs.GetInt("TodayCalories", 0);
-    currentCalories += calAmount;
-    PlayerPrefs.SetInt("TodayCalories", currentCalories);
-    PlayerPrefs.Save();
-    
-    Debug.Log("Total calories today: " + currentCalories);
-    
-    // Go back to Dashboard
-    UnityEngine.SceneManagement.SceneManager.LoadScene("Dashboard");
-}
+    void OnFoodSelected(string foodName, string calories, float protein, float carbs, float fat)
+    {
+        Debug.Log("Selected: " + foodName + " - " + calories + " kcal");
+        
+        // Parse calories to int
+        int calAmount = 0;
+        int.TryParse(calories, out calAmount);
+        
+        // Save to PlayerPrefs
+        int currentCalories = PlayerPrefs.GetInt("TodayCalories", 0);
+        currentCalories += calAmount;
+        PlayerPrefs.SetInt("TodayCalories", currentCalories);
+        PlayerPrefs.Save();
+        
+        // Save to Firebase if user is logged in
+        FirebaseUser currentUser = FirebaseAuth.DefaultInstance.CurrentUser;
+        if (currentUser != null)
+        {
+            // Create meal record with actual nutrition data
+            MealRecord newMeal = new MealRecord(foodName, calAmount, protein, carbs, fat);
+            
+            // Save to cloud
+            _ = diaryService.SaveMealAsync(currentUser.UserId, newMeal);
+            Debug.Log("Meal saved to cloud: " + foodName);
+        }
+        else
+        {
+            Debug.LogWarning("User not logged in. Saved locally only.");
+        }
+        
+        Debug.Log("Total calories today: " + currentCalories);
+        
+        // Go back to Dashboard
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Dashboard");
+    }
 }
 
 [System.Serializable]

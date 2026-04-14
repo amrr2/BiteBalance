@@ -15,9 +15,15 @@ public class AuthController : MonoBehaviour
     public GameObject loginPanel;
     public GameObject registerPanel;
     public GameObject dashboardPanel;
+    
+    // ViewModel handles all the logic
+    private AuthViewModel viewModel;
 
     private void Start()
     {
+        // Create the ViewModel
+        viewModel = new AuthViewModel();
+        
         // Add button listeners
         loginButton.onClick.AddListener(OnLoginClicked);
         registerButton.onClick.AddListener(OnRegisterClicked);
@@ -25,65 +31,33 @@ public class AuthController : MonoBehaviour
 
     private async void OnLoginClicked()
     {
-        string email = emailInput.text;
-        string password = passwordInput.text;
-
-        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-        {
-            ShowFeedback("Please enter email and password");
-            return;
-        }
-
-        ShowFeedback("Logging in...");
-
-        bool success = await FirebaseManager.Instance.SignInUser(email, password);
+        // Pass UI values to ViewModel
+        viewModel.Email = emailInput.text;
+        viewModel.Password = passwordInput.text;
+        
+        // ViewModel handles the logic
+        bool success = await viewModel.TryLogin();
+        
+        // Update UI with result from ViewModel
+        ShowFeedback(viewModel.FeedbackMessage);
 
         if (success)
         {
-            ShowFeedback("Login successful!");
             UnityEngine.SceneManagement.SceneManager.LoadScene("Dashboard");
-            // Load dashboard or next screen
-            if (dashboardPanel != null)
-            {
-                loginPanel.SetActive(false);
-                dashboardPanel.SetActive(true);
-            }
-        }
-        else
-        {
-            ShowFeedback("Login failed. Check your credentials.");
         }
     }
 
     private async void OnRegisterClicked()
     {
-        string email = emailInput.text;
-        string password = passwordInput.text;
-
-        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-        {
-            ShowFeedback("Please enter email and password");
-            return;
-        }
-
-        if (password.Length < 6)
-        {
-            ShowFeedback("Password must be at least 6 characters");
-            return;
-        }
-
-        ShowFeedback("Creating account...");
-
-        bool success = await FirebaseManager.Instance.RegisterUser(email, password);
-
-        if (success)
-        {
-            ShowFeedback("Account created! You can now login.");
-        }
-        else
-        {
-            ShowFeedback("Registration failed. Try a different email.");
-        }
+        // Pass UI values to ViewModel
+        viewModel.Email = emailInput.text;
+        viewModel.Password = passwordInput.text;
+        
+        // ViewModel handles the logic
+        bool success = await viewModel.TryRegister();
+        
+        // Update UI with result from ViewModel
+        ShowFeedback(viewModel.FeedbackMessage);
     }
 
     private void ShowFeedback(string message)
@@ -94,4 +68,4 @@ public class AuthController : MonoBehaviour
         }
         Debug.Log(message);
     }
-}// UI Polish v1.1
+}
