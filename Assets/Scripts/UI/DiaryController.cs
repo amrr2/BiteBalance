@@ -19,13 +19,12 @@ public class DiaryController : MonoBehaviour
 
     void LoadTodaysMeals()
     {
-        // Show today's date
+
         dateText.text = System.DateTime.Now.ToString("dddd, MMMM d");
-        
-        // Get calories from PlayerPrefs
+
         int todayCalories = PlayerPrefs.GetInt("TodayCalories", 0);
         totalCaloriesText.text = "Total: " + todayCalories + " kcal";
-        
+
         Debug.Log("Diary loaded. Total calories: " + todayCalories);
     }
 

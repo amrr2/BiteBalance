@@ -20,13 +20,13 @@ public class SettingsController : MonoBehaviour
         backButton.onClick.AddListener(OnBackClicked);
         saveButton.onClick.AddListener(OnSaveClicked);
         logoutButton.onClick.AddListener(OnLogoutClicked);
-        
+
         LoadSettings();
     }
 
     void LoadSettings()
     {
-        // Show user email
+
         FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
         if (user != null)
         {
@@ -36,17 +36,16 @@ public class SettingsController : MonoBehaviour
         {
             emailText.text = "Not logged in";
         }
-        
-        // Load calorie goal
+
         calorieGoal = PlayerPrefs.GetInt("CalorieGoal", 2000);
         goalInput.text = calorieGoal.ToString();
-        
+
         Debug.Log("Settings loaded");
     }
 
     void OnSaveClicked()
     {
-        // Save calorie goal
+
         if (int.TryParse(goalInput.text, out int newGoal))
         {
             calorieGoal = newGoal;

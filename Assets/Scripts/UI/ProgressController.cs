@@ -19,14 +19,12 @@ public class ProgressController : MonoBehaviour
 
     void LoadProgress()
     {
-        // Get today's calories
+
         int todayCalories = PlayerPrefs.GetInt("TodayCalories", 0);
-        
-        // For now, show simple stats
+
         averageCaloriesText.text = "Today: " + todayCalories + " kcal";
         totalCaloriesText.text = "Goal: 2000 kcal";
-        
-        // Calculate if under or over goal
+
         int remaining = 2000 - todayCalories;
         if (remaining >= 0)
         {
@@ -36,7 +34,7 @@ public class ProgressController : MonoBehaviour
         {
             streakText.text = Mathf.Abs(remaining) + " kcal over goal";
         }
-        
+
         Debug.Log("Progress loaded");
     }
 

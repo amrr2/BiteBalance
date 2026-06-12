@@ -17,15 +17,14 @@ public class LogMealController : MonoBehaviour
     [Header("API Settings")]
     private string apiKey = "e2bce2461e764673ae23dbcdc1a6f967";
     private string apiUrl = "https://api.spoonacular.com/food/ingredients/search?query=";
-    
-    // Service for saving to Firebase
+
     private IFoodDiaryService diaryService;
-    
+
     void Start()
     {
-        // Create the service
+
         diaryService = new FirebaseDiaryService();
-        
+
         searchButton.onClick.AddListener(OnSearchClicked);
         backButton.onClick.AddListener(OnBackClicked);
     }
@@ -46,7 +45,7 @@ public class LogMealController : MonoBehaviour
 
     IEnumerator SearchFood(string query)
     {
-        // Clear previous results
+
         foreach (Transform child in resultsPanel)
         {
             Destroy(child.gameObject);
@@ -63,7 +62,6 @@ public class LogMealController : MonoBehaviour
         {
             yield return request.SendWebRequest();
 
-            // Clear loading text
             foreach (Transform child in resultsPanel)
             {
                 Destroy(child.gameObject);
@@ -108,7 +106,7 @@ public class LogMealController : MonoBehaviour
             {
                 string json = request.downloadHandler.text;
                 Debug.Log("Nutrition Response: " + json);
-                
+
                 NutritionInfo info = JsonUtility.FromJson<NutritionInfo>(json);
 
                 float calories = 0, protein = 0, carbs = 0, fat = 0;
@@ -156,7 +154,6 @@ public class LogMealController : MonoBehaviour
         Image bg = item.AddComponent<Image>();
         bg.color = new Color(0.17f, 0.22f, 0.28f);
 
-        // Food name
         GameObject nameObj = new GameObject("FoodName");
         nameObj.transform.SetParent(item.transform, false);
         RectTransform nameRect = nameObj.AddComponent<RectTransform>();
@@ -167,7 +164,6 @@ public class LogMealController : MonoBehaviour
         nameTmp.fontSize = 28;
         nameTmp.color = Color.white;
 
-        // Calories
         if (!string.IsNullOrEmpty(calories))
         {
             GameObject calObj = new GameObject("Calories");
@@ -182,7 +178,6 @@ public class LogMealController : MonoBehaviour
             calTmp.alignment = TextAlignmentOptions.Right;
         }
 
-        // Macros
         if (!string.IsNullOrEmpty(macros))
         {
             GameObject macroObj = new GameObject("Macros");
@@ -197,7 +192,6 @@ public class LogMealController : MonoBehaviour
             macroTmp.alignment = TextAlignmentOptions.Center;
         }
 
-        // Make clickable - pass all nutrition data
         Button btn = item.AddComponent<Button>();
         string calStr = calories;
         string food = foodName;
@@ -210,25 +204,34 @@ public class LogMealController : MonoBehaviour
     void OnFoodSelected(string foodName, string calories, float protein, float carbs, float fat)
     {
         Debug.Log("Selected: " + foodName + " - " + calories + " kcal");
-        
-        // Parse calories to int
+
         int calAmount = 0;
         int.TryParse(calories, out calAmount);
-        
-        // Save to PlayerPrefs
+
         int currentCalories = PlayerPrefs.GetInt("TodayCalories", 0);
         currentCalories += calAmount;
         PlayerPrefs.SetInt("TodayCalories", currentCalories);
+
+        float currentProtein = PlayerPrefs.GetFloat("TodayProtein", 0);
+        currentProtein += protein;
+        PlayerPrefs.SetFloat("TodayProtein", currentProtein);
+
+        float currentCarbs = PlayerPrefs.GetFloat("TodayCarbs", 0);
+        currentCarbs += carbs;
+        PlayerPrefs.SetFloat("TodayCarbs", currentCarbs);
+
+        float currentFat = PlayerPrefs.GetFloat("TodayFat", 0);
+        currentFat += fat;
+        PlayerPrefs.SetFloat("TodayFat", currentFat);
+
         PlayerPrefs.Save();
-        
-        // Save to Firebase if user is logged in
+
         FirebaseUser currentUser = FirebaseAuth.DefaultInstance.CurrentUser;
         if (currentUser != null)
         {
-            // Create meal record with actual nutrition data
+
             MealRecord newMeal = new MealRecord(foodName, calAmount, protein, carbs, fat);
-            
-            // Save to cloud
+
             _ = diaryService.SaveMealAsync(currentUser.UserId, newMeal);
             Debug.Log("Meal saved to cloud: " + foodName);
         }
@@ -236,10 +239,10 @@ public class LogMealController : MonoBehaviour
         {
             Debug.LogWarning("User not logged in. Saved locally only.");
         }
-        
+
         Debug.Log("Total calories today: " + currentCalories);
-        
-        // Go back to Dashboard
+        Debug.Log("Total protein: " + currentProtein + "g, Carbs: " + currentCarbs + "g, Fat: " + currentFat + "g");
+
         UnityEngine.SceneManagement.SceneManager.LoadScene("Dashboard");
     }
 }
