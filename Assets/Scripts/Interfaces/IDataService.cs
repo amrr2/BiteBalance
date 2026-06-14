@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-// Interface for data storage - works with Firebase or local storage
+
 public interface IDataService
 {
     Task SaveMeal(string odId, MealData meal);
@@ -11,7 +11,7 @@ public interface IDataService
     Task<UserProfile> GetUserProfile(string odId);
 }
 
-// Simple data class for meals
+
 [System.Serializable]
 public class MealData
 {
@@ -22,10 +22,10 @@ public class MealData
     public float carbs;
     public float fat;
     public string date;
-    public string mealType; // breakfast, lunch, dinner, snack
+    public string mealType; 
 }
 
-// Simple data class for user profile
+
 [System.Serializable]
 public class UserProfile
 {
