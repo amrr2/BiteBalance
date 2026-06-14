@@ -1,7 +1,6 @@
 using UnityEngine;
 
-// Initializes all services when the app starts
-// Add this to an empty GameObject in your first scene
+
 public class AppSetup : MonoBehaviour
 {
     private static bool isInitialized = false;
@@ -23,7 +22,7 @@ public class AppSetup : MonoBehaviour
     {
         Debug.Log("Setting up services...");
         
-        // Register navigation service
+        
         ServiceLocator.Register<INavigationService>(new NavigationService());
         
         Debug.Log("Services ready!");
