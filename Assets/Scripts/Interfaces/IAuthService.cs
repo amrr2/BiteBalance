@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 
-// Interface for authentication - allows swapping Firebase for testing
 public interface IAuthService
 {
     string CurrentUserId { get; }
