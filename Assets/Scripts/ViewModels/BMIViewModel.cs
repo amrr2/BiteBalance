@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Handles BMI calculation logic
+
 public class BMIViewModel
 {
     public float Height { get; set; } // in cm
@@ -9,7 +9,7 @@ public class BMIViewModel
     public string Category { get; private set; }
     public string FeedbackMessage { get; private set; }
     
-    // Calculate BMI from height and weight
+    
     public void Calculate()
     {
         if (Height <= 0 || Weight <= 0)
@@ -18,11 +18,11 @@ public class BMIViewModel
             return;
         }
         
-        // BMI formula: weight(kg) / height(m)^2
+      
         float heightInMeters = Height / 100f;
         BMI = Weight / (heightInMeters * heightInMeters);
         
-        // Determine category
+        
         if (BMI < 18.5f)
         {
             Category = "Underweight";
@@ -44,7 +44,7 @@ public class BMIViewModel
         Debug.Log(FeedbackMessage);
     }
     
-    // Save to PlayerPrefs
+   
     public void SaveData()
     {
         PlayerPrefs.SetFloat("UserHeight", Height);
@@ -55,7 +55,7 @@ public class BMIViewModel
         Debug.Log("BMI data saved");
     }
     
-    // Load from PlayerPrefs
+    
     public void LoadData()
     {
         Height = PlayerPrefs.GetFloat("UserHeight", 0);
