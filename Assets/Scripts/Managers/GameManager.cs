@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        // Singleton pattern - only one GameManager exists
+        
         if (Instance == null)
         {
             Instance = this;
@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Load different scenes
+    
     public void LoadScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
