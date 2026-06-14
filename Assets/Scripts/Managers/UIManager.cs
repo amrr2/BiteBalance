@@ -29,7 +29,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // Show/Hide Panels
+    
     public void ShowLogin()
     {
         HideAllPanels();
@@ -56,7 +56,7 @@ public class UIManager : MonoBehaviour
         HideLoading();
     }
 
-    // Loading indicator
+    
     public void ShowLoading(string message = "Loading...")
     {
         if (loadingPanel != null)
@@ -71,7 +71,7 @@ public class UIManager : MonoBehaviour
         if (loadingPanel != null) loadingPanel.SetActive(false);
     }
 
-    // Show temporary message (like a toast)
+    
     public void ShowMessage(string message, float duration = 2f)
     {
         StartCoroutine(ShowMessageCoroutine(message, duration));
