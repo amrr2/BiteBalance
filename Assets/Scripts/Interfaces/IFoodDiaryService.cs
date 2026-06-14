@@ -1,14 +1,14 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-// Interface for saving meals to Firebase
+
 public interface IFoodDiaryService
 {
     Task SaveMealAsync(string odId, MealRecord meal);
     Task<List<MealRecord>> GetMealsForDateAsync(string odId, string date);
 }
 
-// Meal record class
+
 [System.Serializable]
 public class MealRecord
 {
