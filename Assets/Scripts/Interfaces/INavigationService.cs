@@ -1,4 +1,4 @@
-// Interface for navigation - makes scene loading testable
+
 public interface INavigationService
 {
     void GoTo(string sceneName);
