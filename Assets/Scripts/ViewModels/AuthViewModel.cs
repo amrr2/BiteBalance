@@ -1,8 +1,7 @@
 using UnityEngine;
 using System.Threading.Tasks;
 
-// Handles login and register logic
-// UI (AuthController) uses this for all auth operations
+
 public class AuthViewModel
 {
     public string Email { get; set; }
@@ -12,7 +11,7 @@ public class AuthViewModel
     
     public async Task<bool> TryLogin()
     {
-        // Validate input
+        
         if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password))
         {
             FeedbackMessage = "Please enter email and password";
@@ -22,7 +21,7 @@ public class AuthViewModel
         IsLoading = true;
         FeedbackMessage = "Logging in...";
         
-        // Call Firebase through the manager
+        
         bool success = await FirebaseManager.Instance.SignInUser(Email, Password);
         
         IsLoading = false;
@@ -43,7 +42,7 @@ public class AuthViewModel
     
     public async Task<bool> TryRegister()
     {
-        // Validate input
+        
         if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password))
         {
             FeedbackMessage = "Please enter email and password";
@@ -77,7 +76,7 @@ public class AuthViewModel
         return success;
     }
     
-    // Clear the form
+    
     public void Reset()
     {
         Email = "";
