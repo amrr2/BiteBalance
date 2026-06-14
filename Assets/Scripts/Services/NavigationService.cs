@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Handles all scene navigation in one place
+
 public class NavigationService : INavigationService
 {
     public string CurrentScene 
@@ -17,7 +17,7 @@ public class NavigationService : INavigationService
     
     public void GoBack()
     {
-        // For now just go to dashboard as default
+        
         GoTo("Dashboard");
     }
 }
