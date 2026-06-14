@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-// Handles meal logging and food search logic
+
 public class LogMealViewModel
 {
     public string SearchQuery { get; set; }
@@ -12,7 +12,7 @@ public class LogMealViewModel
     public string FeedbackMessage { get; private set; }
     public bool IsLoading { get; private set; }
     
-    // Calculated values based on servings
+    
     public int TotalCalories 
     { 
         get { return SelectedFood != null ? Mathf.RoundToInt(SelectedFood.calories * Servings) : 0; }
@@ -38,7 +38,7 @@ public class LogMealViewModel
         SearchResults = new List<FoodItem>();
     }
     
-    // Search for food using Spoonacular API
+    
     public async Task SearchFood()
     {
         if (string.IsNullOrEmpty(SearchQuery))
@@ -50,8 +50,7 @@ public class LogMealViewModel
         IsLoading = true;
         FeedbackMessage = "Searching...";
         
-        // Call your existing API manager here
-        // SearchResults = await SpoonacularManager.Instance.SearchFood(SearchQuery);
+  
         
         IsLoading = false;
         
@@ -65,7 +64,7 @@ public class LogMealViewModel
         }
     }
     
-    // Select a food from search results
+    
     public void SelectFood(FoodItem food)
     {
         SelectedFood = food;
@@ -73,14 +72,14 @@ public class LogMealViewModel
         Debug.Log("Selected: " + food.name);
     }
     
-    // Clear selection
+    
     public void ClearSelection()
     {
         SelectedFood = null;
         Servings = 1f;
     }
     
-    // Add the selected food to today's log
+    
     public void AddToLog()
     {
         if (SelectedFood == null)
@@ -89,7 +88,7 @@ public class LogMealViewModel
             return;
         }
         
-        // Add calories to PlayerPrefs
+        
         int currentCalories = PlayerPrefs.GetInt("TodayCalories", 0);
         currentCalories += TotalCalories;
         PlayerPrefs.SetInt("TodayCalories", currentCalories);
@@ -98,12 +97,12 @@ public class LogMealViewModel
         FeedbackMessage = "Added " + SelectedFood.name + " (" + TotalCalories + " cal)";
         Debug.Log(FeedbackMessage);
         
-        // Clear for next entry
+        
         ClearSelection();
     }
 }
 
-// Simple food item class
+
 [System.Serializable]
 public class FoodItem
 {
