@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Firebase.Database;
 
-// Saves meals to Firebase Realtime Database
+
 public class FirebaseDiaryService : IFoodDiaryService
 {
     private DatabaseReference dbReference;
